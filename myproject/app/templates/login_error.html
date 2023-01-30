@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/sign_in.css">
+    <title>Login</title>
+</head>
+<body class="text-center">
+    <main class="form-signin w-100 m-auto">
+        <form>
+        <img class="mb-4" src="{{url_for('static', filename='img/sign_in_icon.ico')}}" alt="" width="96" height="96">
+        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+        <div class="form-floating">
+            <input type="partyTicket" class="form-control" id="floatingTicket" placeholder="148814881488">
+            <label for="floatingTicket">Party ticket</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <label for="floatingPassword">Password</label>
+        </div>
+
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" value="subscription"> Remember me
+            </label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">
+            <a href="/home" style="color: white">Enter NSDAP</a>
+        </button>
+        <p class="mt-5 mb-3 text-muted">© 1920–1945</p>
+            <h1 class="h3 mb-3 fw-normal">Error: Password Incorrect</h1>
+        </form>
+    </main>
+</body>
+</html>

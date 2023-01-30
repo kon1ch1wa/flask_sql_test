@@ -1,0 +1,40 @@
+{% extends 'auth.html' %}
+{% block title %}Sign In{% endblock %}
+
+{% block body %}
+<body class="text-center">
+    <main class="form-signin w-100 m-auto">
+        <form>
+        <img class="mb-4" src="{{url_for('static', filename='img/sign_in_icon.ico')}}" alt="" width="96" height="96">
+        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+        <div class="form-floating">
+            <input type="text" class="form-control" id="name" name="name" placeholder="Hans">
+            <label for="name">Name</label>
+        </div>
+        <div class="form-floating">
+            <input type="text" class="form-control" id="surname" name="surname" placeholder="Schwarz">
+            <label for="surname">Surname</label>
+        </div>
+        <div class="form-floating">
+            <input type="text" class="form-control" id="email" name="email" placeholder="hans.schwarz@nsdap.de">
+            <label for="email">Email</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+            <label for="password">Password</label>
+        </div>
+
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" value="false"> Subscribe on Völkischer Beobachter
+            </label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="button">
+            Enter NSDAP
+        </button>
+        <p class="mt-5 mb-3 text-muted">© 1920–1945</p>
+        </form>
+    </main>
+</body>
+{% endblock %}

@@ -1,0 +1,106 @@
+1. Add registration.
+    - Users are going into table 'members', which based in db 'nsdap'
+    - 'members' contains next columns
+        . ID
+        . First Name
+        . Surname
+        . Email (for messages)
+        . Password
+        . Party Ticket, which is given to user, while adding him into table
+    - Log in
+        . Party Ticket
+        . Password
+    - Unique alias for party ticket
+2. Home page has welcome message, which contains only first and second name of user
+    - These two fields are found in table by party ticket.
+    - User can see Party Ticket in settings.
+3. When user leaves web service, system forgets him and make log in.
+4. 'Remember me' function
+5. 'Völkischer Beobachter' function - Subscription on Em
+6. Checking others' info
+7. Add posts and chat
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/sign_in.css">
+    <title>Sign in</title>
+</head>
+<body class="text-center">
+    <main class="form-signin w-100 m-auto">
+        <form>
+        <img class="mb-4" src="{{url_for('static', filename='img/sign_in_icon.ico')}}" alt="" width="96" height="96">
+        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+        <div class="form-floating">
+            <input type="partyTicket" class="form-control" id="floatingTicket" placeholder="148814881488">
+            <label for="floatingTicket">Party ticket</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+            <label for="floatingPassword">Password</label>
+        </div>
+
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" value="subscription"> Remember me
+            </label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">
+            <a href="/home" style="color: white">Enter NSDAP</a>
+        </button>
+        <p class="mt-5 mb-3 text-muted">© 1920–1945</p>
+        </form>
+    </main>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <link rel="stylesheet" href="/static/css/sign_in.css">
+    <title>Sign in</title>
+</head>
+<body class="text-center">
+    <main class="form-signin w-100 m-auto">
+        <form>
+        <img class="mb-4" src="{{url_for('static', filename='img/sign_in_icon.ico')}}" alt="" width="96" height="96">
+        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+        <div class="form-floating">
+            <input type="text" class="form-control" id="name" name="name" placeholder="Hans">
+            <label for="name">Name</label>
+        </div>
+        <div class="form-floating">
+            <input type="text" class="form-control" id="surname" name="surname" placeholder="Schwarz">
+            <label for="surname">Surname</label>
+        </div>
+        <div class="form-floating">
+            <input type="text" class="form-control" id="email" name="email" placeholder="hans.schwarz@nsdap.de">
+            <label for="email">Email</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+            <label for="password">Password</label>
+        </div>
+
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" value="false"> Subscribe on Völkischer Beobachter
+            </label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="button">
+            Enter NSDAP
+        </button>
+        <p class="mt-5 mb-3 text-muted">© 1920–1945</p>
+        </form>
+    </main>
+</body>
+</html>
