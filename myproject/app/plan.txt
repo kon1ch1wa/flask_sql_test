@@ -104,3 +104,20 @@
     </main>
 </body>
 </html>
+
+
+with app.app.app.app_context():
+    test_member = Member(
+        name='Hermann',
+        surname='Goering',
+        password=generate_password_hash('1488')
+    )
+    db.session.add(test_member)
+    db.session.commit()
+    test_status = MemberStatus(
+        mail='h.goering.luftwaffen@nsdap.de',
+        subscription=True,
+        partyTicket=test_member.id
+    )
+    db.session.add(test_status)
+    db.session.commit()

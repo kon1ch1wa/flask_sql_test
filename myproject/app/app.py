@@ -11,7 +11,7 @@ class Member(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
     surname = db.Column(db.String(50), nullable=False)
-    password = db.Column(db.Integer, nullable=False)
+    password = db.Column(db.String(102), nullable=False)
 
 
 class MemberStatus(db.Model):
@@ -20,6 +20,11 @@ class MemberStatus(db.Model):
     subscription = db.Column(db.Boolean)
 
     partyTicket = db.Column(db.Integer, db.ForeignKey('member.id'))
+
+    def __repr__(self):
+        return f'Member:\t {Member.name}\t {Member.surname}\n' \
+               f'E-mail and Party Ticket:\t {self.mail}\t {self.partyTicket}\n' \
+               f'Subscription Status and Hash:\t {self.subscription}\t {Member.password}'
 
 
 @app.route('/')
@@ -31,18 +36,20 @@ def index():
 def sign_in():
     if request.method == 'POST':
         try:
-            hashed_pass = generate_password_hash(request.form['password'])
+            # hashed_pass = generate_password_hash(request.form['password'])
             new_member = Member(
                 name=request.form['name'],
                 surname=request.form['surname'],
-                password=hashed_pass
+                password=request.form['password']
+                # password=hashed_pass
             )
             db.session.add(new_member)
             db.session.flush()
 
             new_member_status = MemberStatus(
                 mail=request.form['email'],
-                subscription=request.form['subscription'],
+                # subscription=request.form['subscription'],
+                subscription=True,
                 partyTicket=new_member.id
             )
             db.session.add(new_member_status)
@@ -57,12 +64,20 @@ def sign_in():
 def login():
     if request.method == 'POST':
         try:
-            new_hashed_pass = generate_password_hash(request.form['password'])
-            db_pass = db.Query.filter_by(password=new_hashed_pass).first()
-            if new_hashed_pass != db_pass:
+            ticket = request.form['ticket']
+            db_ticket = db.Query.filter_by(ticket=ticket).first()
+            if ticket != db_ticket:
+                raise NameError
+            hashed_pass = generate_password_hash(request.form['password'])
+            db_hashed_pass = db.Query.filter_by(password=hashed_pass).first()
+            if hashed_pass != db_hashed_pass:
                 raise KeyError
+            else:
+                return redirect(url_for('/'))
+        except NameError:
+            return render_template('login.html', error=1)
         except KeyError:
-            return render_template('login_error.html')
+            return render_template('login.html', error=2)
     return render_template('login.html')
 
 
