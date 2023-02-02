@@ -1,0 +1,14 @@
+html,
+body {
+    font-color: #00f500
+}
+h1 {
+    color: #0000f5
+}
+a {
+    text-decoration: none;
+    color: #0a0a0a
+}
+a:hover {
+    color: #0000f5
+}

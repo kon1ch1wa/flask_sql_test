@@ -121,3 +121,6 @@ with app.app.app.app_context():
     )
     db.session.add(test_status)
     db.session.commit()
+
+member1 = Member(name='Adolf', surname='Eichmann', password='1488')
+member1_stat = MemberStatus(mail='a.eichmann@lol.nsdap.de', subscription=True, partyTicket=member1.id)

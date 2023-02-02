@@ -1,4 +1,4 @@
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, url_for, request, redirect, render_template, session
 from flask_sqlalchemy import SQLAlchemy
 
@@ -13,6 +13,9 @@ class Member(db.Model):
     surname = db.Column(db.String(50), nullable=False)
     password = db.Column(db.String(102), nullable=False)
 
+    def __repr__(self):
+        return f'Member:\t {self.name}\t {self.surname}\t #{self.id}\n'
+
 
 class MemberStatus(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -22,41 +25,74 @@ class MemberStatus(db.Model):
     partyTicket = db.Column(db.Integer, db.ForeignKey('member.id'))
 
     def __repr__(self):
-        return f'Member:\t {Member.name}\t {Member.surname}\n' \
-               f'E-mail and Party Ticket:\t {self.mail}\t {self.partyTicket}\n' \
-               f'Subscription Status and Hash:\t {self.subscription}\t {Member.password}'
+        return f'E-mail and Party Ticket:\t {self.mail}\t {self.partyTicket}\n' \
+               f'Subscription Status:\t {self.subscription}\n'
 
 
 @app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template('index.html')
+
+
+@app.route('/home/<int:ticket>')
+def home(ticket):
+    try:
+        person = db.Query.filter_by(partyTicket=ticket).first()
+        if person is None:
+            raise KeyError
+    except KeyError:
+        return render_template('invalid.html')
+    return render_template('home.html', name=person.name, surname=person.surname,
+                           sub=person.subscription, ticket=ticket)
+
+
+@app.route('/<int:ticket>')
+def guest():
+    return render_template('guest.html')
 
 
 @app.route('/sign_in', methods=['POST', 'GET'])
 def sign_in():
     if request.method == 'POST':
         try:
-            # hashed_pass = generate_password_hash(request.form['password'])
-            new_member = Member(
-                name=request.form['name'],
-                surname=request.form['surname'],
-                password=request.form['password']
-                # password=hashed_pass
-            )
-            db.session.add(new_member)
-            db.session.flush()
+            with app.app_context():
+                check_name = request.form.get('name')
+                check_surname = request.form.get('surname')
+                check_mail = request.form.get('email')
+                check_pass = request.form.get('password')
+                check_sub = False
+                if request.form.get('sub'):
+                    check_sub = True
+                else:
+                    check_sub = False
+                if check_name == '' or check_surname == '' or check_mail == '' or check_pass == '':
+                    raise ValueError
 
-            new_member_status = MemberStatus(
-                mail=request.form['email'],
-                # subscription=request.form['subscription'],
-                subscription=True,
-                partyTicket=new_member.id
-            )
-            db.session.add(new_member_status)
-            db.session.commit()
+                hashed_pass = generate_password_hash(check_pass)
+                new_member = Member(
+                    name=check_name,
+                    surname=check_surname,
+                    password=hashed_pass
+                )
+                db.session.add(new_member)
+                db.session.commit()
+
+                new_member_status = MemberStatus(
+                    mail=check_mail,
+                    subscription=check_sub,
+                    partyTicket=new_member.id
+                )
+                db.session.add(new_member_status)
+                db.session.commit()
+
+                return redirect('/')
+        except ValueError:
+            return render_template('sign_in.html', error=1)
+        except NameError:
+            return render_template('sign_in.html', error=2)
         except:
             db.session.rollback()
-            print('Database error: Connection Error')
+            return render_template('sign_in.html', error=3)
     return render_template('sign_in.html')
 
 
@@ -65,15 +101,16 @@ def login():
     if request.method == 'POST':
         try:
             ticket = request.form['ticket']
-            db_ticket = db.Query.filter_by(ticket=ticket).first()
+            password = request.form['ticket']
+            person = db.Query.filter_by(partyTicket=ticket).first()
+            db_ticket = person.partyTicket
             if ticket != db_ticket:
                 raise NameError
-            hashed_pass = generate_password_hash(request.form['password'])
-            db_hashed_pass = db.Query.filter_by(password=hashed_pass).first()
-            if hashed_pass != db_hashed_pass:
-                raise KeyError
+
+            if check_password_hash(person.password, password):
+                return redirect('/home/{{ ticket }}')
             else:
-                return redirect(url_for('/'))
+                raise KeyError
         except NameError:
             return render_template('login.html', error=1)
         except KeyError:

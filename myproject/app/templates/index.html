@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link rel="icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-    <title>Index</title>
-</head>
-<body>
+{% extends 'default.html' %}
+{% block title %}
+Index
+{% endblock %}
+{% block content %}
     <div class="sign-in">
-        <a href="/sign_in">Sign In</a>
+        <h1><a href="/sign_in">Sign In</a></h1>
     </div>
     <div class="log-in">
-        <a href="/login">Login</a>
+        <h1><a href="/login">Login</a></h1>
     </div>
-</body>
-</html>
+{% endblock %}

@@ -4,7 +4,7 @@
 {% block body %}
 <body class="text-center" xmlns="http://www.w3.org/1999/html">
     <main class="form-signin w-100 m-auto">
-        <form>
+        <form method="post">
             <img class="mb-4" src="{{url_for('static', filename='img/sign_in_icon.ico')}}" alt="" width="96" height="96">
             <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
@@ -26,11 +26,19 @@
             </div>
 
             <div class="checkbox mb-3">
-                <label>
-                    <input type="checkbox" name="subscription" value="false"> Subscribe on Völkischer Beobachter
-                </label>
+                <input type="checkbox" id="sub" name="sub">
+                <label for="sub"> Subscribe on Völkischer Beobachter</label>
             </div>
-            <input class="w-100 btn btn-lg btn-primary" type="submit" id="send" name="send" value="Enter NSDAP">
+            <input class="w-100 btn btn-lg btn-primary" type="submit" value="Enter NSDAP">
+            {% if error==1 %}
+            <h4 class="mt-5 mb-3 text-muted">Error: One or more of the fields are empty</h4>
+            {% endif %}
+            {% if error==2 %}
+            <h4 class="mt-5 mb-3 text-muted">Error: This e-mail is already occupied</h4>
+            {% endif %}
+            {% if error==3 %}
+            <h4 class="mt-5 mb-3 text-muted">Error: Database error {{ check }}</h4>
+            {% endif %}
             <p class="mt-5 mb-3 text-muted">© 1920–1945</p>
         </form>
     </main>
