@@ -18,13 +18,10 @@
             </div>
 
             <div class="checkbox mb-3">
-                <label>
-                    <input type="checkbox" value="subscription"> Remember me
-                </label>
+                <input type="checkbox" id="remember" name="remember">
+                <label for="remember"> Remember me</label>
             </div>
-            <button class="w-100 btn btn-lg btn-primary" type="submit">
-                Enter NSDAP
-            </button>
+            <input class="w-100 btn btn-lg btn-primary" type="submit" value="Enter NSDAP">
             {% if error==1 %}
             <h4 class="mt-5 mb-3 text-muted">Error: Party Ticket is invalid</h4>
             {% endif %}

@@ -37,13 +37,14 @@ def index():
 @app.route('/home/<int:ticket>')
 def home(ticket):
     try:
-        person = db.Query.filter_by(partyTicket=ticket).first()
+        person = Member.query.filter_by(id=ticket).first()
         if person is None:
             raise KeyError
+        person_stat = MemberStatus.query.filter_by(partyTicket=ticket).first()
     except KeyError:
         return render_template('invalid.html')
     return render_template('home.html', name=person.name, surname=person.surname,
-                           sub=person.subscription, ticket=ticket)
+                           sub=person_stat.subscription, ticket=ticket)
 
 
 @app.route('/<int:ticket>')
@@ -85,7 +86,7 @@ def sign_in():
                 db.session.add(new_member_status)
                 db.session.commit()
 
-                return redirect('/')
+                return redirect(url_for('home', ticket=new_member_status.partyTicket))
         except ValueError:
             return render_template('sign_in.html', error=1)
         except NameError:
@@ -100,17 +101,17 @@ def sign_in():
 def login():
     if request.method == 'POST':
         try:
-            ticket = request.form['ticket']
-            password = request.form['ticket']
-            person = db.Query.filter_by(partyTicket=ticket).first()
-            db_ticket = person.partyTicket
-            if ticket != db_ticket:
-                raise NameError
+            with app.app_context():
+                ticket = request.form['ticket']
+                password = request.form['password']
+                person = Member.query.filter_by(id=ticket).first()
+                if person is None:
+                    raise NameError
 
-            if check_password_hash(person.password, password):
-                return redirect('/home/{{ ticket }}')
-            else:
-                raise KeyError
+                if check_password_hash(person.password, password):
+                    return redirect(url_for('home', ticket=ticket))
+                else:
+                    raise KeyError
         except NameError:
             return render_template('login.html', error=1)
         except KeyError:
